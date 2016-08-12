@@ -10,3 +10,9 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.idea/
+fast-core/fast-core.iml
+fast-framework.iml
+fast-sample/fast-sample.iml
+fast-core/target/
+fast-sample/target/

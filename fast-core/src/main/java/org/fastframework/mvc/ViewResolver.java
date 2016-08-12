@@ -14,13 +14,17 @@ import java.io.IOException;
  */
 public class ViewResolver {
 
-	public static void resolveView(HttpServletRequest request, HttpServletResponse response, Object controllerMethodResult,HandlerBody handler) {
+	public static void resolveView(HttpServletRequest request, HttpServletResponse response, Object controllerMethodResult,Object handler) {
+
+		if(!(handler instanceof HandlerBody)) throw new RuntimeException("渲染view失败");
+
+		HandlerBody handlerBody = (HandlerBody) handler;
+
 		// TODO 根据返回值返回
 		try {
-			String responseMediaType = handler.getResponseMediaType();
+			String responseMediaType = handlerBody.getResponseMediaType();
 			if (MediaTypes.TEXT_PLAIN_UTF_8.equals(responseMediaType)) {
 				response.getWriter().print(controllerMethodResult);
-				return;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

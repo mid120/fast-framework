@@ -15,16 +15,19 @@ import java.util.List;
  */
 public class HandlerInvoker {
 
-	public static void invokeHandler(HttpServletRequest request, HttpServletResponse response, HandlerBody handler) {
+	public static Object invokeHandler(HttpServletRequest request, HttpServletResponse response, Object handler) {
+
+		if(!(handler instanceof HandlerBody)) throw new RuntimeException("不能存在匹配的处理器");
+		HandlerBody handlerBody = (HandlerBody) handler;
+
 		// 从 Request 获取参数 - Controller.Method 的 ParamList
 		List<Object> controllerMethodParamList = WebUtil.getRequestParamMap(request);
 
 		// ReflectUtil 获取 Controller.Method 的返回值
-		Object controllerMethodResult = ReflectUtil.invokeControllerMethod(handler.getControllerClass(),
-				handler.getControllerMethod(),controllerMethodParamList);
 
-		// View 处理
-		ViewResolver.resolveView(request,response,controllerMethodResult,handler);
+		return ReflectUtil.invokeControllerMethod(handlerBody.getControllerClass(),
+												  handlerBody.getControllerMethod(),
+												  controllerMethodParamList);
 	}
 
 }

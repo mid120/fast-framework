@@ -25,7 +25,7 @@ public class ControllerCollection {
     /**
      * Controller Map 请求 -> 方法体 的映射
      */
-    public static final Map<RequestBody, HandlerBody> methodMap = new LinkedHashMap<>();
+    private static final Map<RequestBody, HandlerBody> methodMap = new LinkedHashMap<>();
 
     /**
      * Controller扫描包的目录

@@ -3,7 +3,9 @@ package org.fastframework.mvc;
 import org.fastframework.mvc.annotation.RequestMethod;
 import org.fastframework.mvc.bean.HandlerBody;
 import org.fastframework.mvc.bean.RequestBody;
+import org.fastframework.mvc.interceptor.HandlerInterceptor;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,24 +22,23 @@ public class HandlerMapping {
 	 * @param requestPath
 	 * @return
 	 */
-	public static HandlerBody getHandler(String requestMethod, String requestPath) {
-		HandlerBody handler = null;
+	public static HandlerExecutionChain getHandler(String requestMethod, String requestPath) {
+		HandlerBody handler;
 
 		//  Controller Map 请求 -> 方法体 的映射
 		Map<RequestBody, HandlerBody> methodMap = ControllerCollection.getMethodMap();
+		List<HandlerInterceptor> interceptors = InterceptorCollection.getInterceptors();
 		for (Map.Entry<RequestBody, HandlerBody> methodEntry : methodMap.entrySet()) {
 			RequestBody req = methodEntry.getKey();
 			String reqPath  = req.getRequestPath();
 			RequestMethod reqMethod = req.getRequestMethod();
-
 			if (reqPath.equals(requestPath) && reqMethod.name().equalsIgnoreCase(requestMethod)) {
 				handler = methodEntry.getValue();
 				if (handler != null) {
-					return handler;
+					return new HandlerExecutionChain(handler, interceptors);
 				}
 			}
 		}
-
-		return handler;
+		return null;
 	}
 }
